@@ -4,10 +4,8 @@ import in.dreamlab.graphite.comm.messages.IntervalMessage;
 import in.dreamlab.graphite.graphData.IntervalData;
 import in.dreamlab.wicm.conf.WICMConstants;
 import in.dreamlab.wicm.graph.computation.DebugDeferredWindowIntervalComputation;
-import in.dreamlab.wicm.graph.computation.DebugWindowIntervalComputation;
 import in.dreamlab.wicm.io.mutations.WICMMutationFileReader;
 import in.dreamlab.wicm.types.VarIntWritable;
-import org.apache.giraph.edge.Edge;
 import org.apache.giraph.edge.OutEdges;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.IntWritable;
@@ -30,27 +28,15 @@ public abstract class DebugWICMMutationsIntervalComputation<I extends WritableCo
             mutationReader.initialise(path);
             while (mutationReader.hasNext()) {
                 switch (mutationReader.getMode()) {
-                    case ADD_VERTEX:
-                        OutEdges<I, E> mutatedEdges = getConf().createOutEdges();
-                        mutatedEdges.initialize(mutationReader.getEdges());
-                        /*LOG.info("Adding a vertex: "+mutationReader.getVertexId().toString()+","
-                                +mutationReader.getVertexValue().getProperty().toString() +","+mutatedEdges);*/
-                         addVertexRequest(mutationReader.getVertexId(), mutationReader.getVertexValue(), mutatedEdges);
-                        break;
-                    case TRUNCATE_VERTEX:
-                        /*LOG.info("Truncating a vertex: "+mutationReader.getVertexId().toString()+","
-                                +mutationReader.getVertexValue().getLifespan().toString());*/
-                         addVertexRequest(mutationReader.getVertexId(), mutationReader.getVertexValue());
-                        break;
                     case DELETE_VERTEX:
-                        // LOG.info("Deleting a vertex: "+mutationReader.getVertexId().toString());
                         removeVertexRequest(mutationReader.getVertexId());
                         break;
+                    case ADD_VERTEX:
+                    case TRUNCATE_VERTEX:
                     case REPLACE_EDGE:
-                        // LOG.info("Replacing edge: "+mutationReader.getEdges().toString());
-                        for(Edge<I,E> e : mutationReader.getEdges()) {
-                            addEdgeRequest(mutationReader.getVertexId(), e);
-                        }
+                        OutEdges<I,E> mutationEdges = getConf().createOutEdges();
+                        mutationEdges.initialize(mutationReader.getEdges());
+                        addVertexRequest(mutationReader.getVertexId(), mutationReader.getVertexValue(), mutationEdges);
                         break;
                     default:
                         LOG.info("Invalid mode");

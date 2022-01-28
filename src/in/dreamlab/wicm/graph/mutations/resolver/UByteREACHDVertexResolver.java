@@ -50,7 +50,10 @@ public class UByteREACHDVertexResolver extends WICMVertexResolver<IntWritable, U
                 (IntervalVertex<IntWritable, UnsignedByte, Boolean, UByteBooleanIntervalData, Boolean, UByteBooleanIntervalData, ?, ?, ?>)originalVertex;
         IntervalVertex<IntWritable, UnsignedByte, Boolean, UByteBooleanIntervalData, Boolean, UByteBooleanIntervalData, ?, ?, ?> newIntervalVertex =
                 (IntervalVertex<IntWritable, UnsignedByte, Boolean, UByteBooleanIntervalData, Boolean, UByteBooleanIntervalData, ?, ?, ?>)newVertex;
-        intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
-        intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        if(newIntervalVertex.getLifespan().getEnd().intValue() != 0) { // truncate the endpoint of the vertex
+            intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
+            intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        }
+        intervalVertex.setEdges(newIntervalVertex.getEdges());
     }
 }

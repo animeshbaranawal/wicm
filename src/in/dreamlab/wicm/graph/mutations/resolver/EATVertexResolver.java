@@ -43,12 +43,14 @@ public class EATVertexResolver extends WICMVertexResolver<IntWritable, IntIntInt
     @Override
     protected void customAction(Vertex<IntWritable, IntIntIntervalData, IntIntIntervalData> originalVertex,
                                 Vertex<IntWritable, IntIntIntervalData, IntIntIntervalData> newVertex) {
-        // truncate the endpoint of the vertex
         IntervalVertex<IntWritable, Integer, Integer, IntIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?> intervalVertex =
                 (IntervalVertex<IntWritable, Integer, Integer, IntIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?>)originalVertex;
         IntervalVertex<IntWritable, Integer, Integer, IntIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?> newIntervalVertex =
                 (IntervalVertex<IntWritable, Integer, Integer, IntIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?>)newVertex;
-        intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
-        intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        if(newIntervalVertex.getLifespan().getEnd() != Integer.MIN_VALUE) { // truncate the endpoint of the vertex
+            intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
+            intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        }
+        intervalVertex.setEdges(newIntervalVertex.getEdges());
     }
 }

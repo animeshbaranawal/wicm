@@ -44,6 +44,7 @@ public class WICMMutationsWorkerContext extends GraphiteDebugWindowWorkerContext
             } catch (Exception e) {
                 LOG.info("Caught exception: "+ e);
             }
+            System.gc();
         }
         super.postSuperstep();
     }

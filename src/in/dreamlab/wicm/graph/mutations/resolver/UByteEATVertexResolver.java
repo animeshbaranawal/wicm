@@ -50,7 +50,10 @@ public class UByteEATVertexResolver extends WICMVertexResolver<IntWritable, UByt
                 (IntervalVertex<IntWritable, UnsignedByte, Integer, UByteIntIntervalData, Integer, UByteIntIntervalData, ?, ?, ?>)originalVertex;
         IntervalVertex<IntWritable, UnsignedByte, Integer, UByteIntIntervalData, Integer, UByteIntIntervalData, ?, ?, ?> newIntervalVertex =
                 (IntervalVertex<IntWritable, UnsignedByte, Integer, UByteIntIntervalData, Integer, UByteIntIntervalData, ?, ?, ?>)newVertex;
-        intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
-        intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        if(newIntervalVertex.getLifespan().getEnd().intValue() != 0) {
+            intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
+            intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        }
+        intervalVertex.setEdges(newIntervalVertex.getEdges());
     }
 }

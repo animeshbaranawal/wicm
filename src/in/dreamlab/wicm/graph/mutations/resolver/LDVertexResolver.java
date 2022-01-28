@@ -48,7 +48,10 @@ public class LDVertexResolver extends WICMVertexResolver<IntWritable, IntIntInte
                 (IntervalVertex<IntWritable, Integer, Integer, IntIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?>)originalVertex;
         IntervalVertex<IntWritable, Integer, Integer, IntIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?> newIntervalVertex =
                 (IntervalVertex<IntWritable, Integer, Integer, IntIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?>)newVertex;
-        intervalVertex.removeState(intervalVertex.getLifespan().getStart(), newIntervalVertex.getLifespan().getStart());
-        intervalVertex.getLifespan().setStart(newIntervalVertex.getLifespan().getStart());
+        if(newIntervalVertex.getLifespan().getEnd() != Integer.MIN_VALUE) {
+            intervalVertex.removeState(intervalVertex.getLifespan().getStart(), newIntervalVertex.getLifespan().getStart());
+            intervalVertex.getLifespan().setStart(newIntervalVertex.getLifespan().getStart());
+        }
+        intervalVertex.setEdges(newIntervalVertex.getEdges());
     }
 }

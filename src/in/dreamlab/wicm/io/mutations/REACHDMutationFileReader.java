@@ -21,7 +21,7 @@ public class REACHDMutationFileReader extends WICMMutationFileReader<IntWritable
 
     @Override
     IntBooleanIntervalData setVertexValue(String[] line) {
-        if(getMode() == MODE.DELETE_VERTEX || getMode() == MODE.REPLACE_EDGE)
+        if(getMode() == MODE.DELETE_VERTEX)
             return null;
 
         String[] points = line[2].split("/");
@@ -29,9 +29,12 @@ public class REACHDMutationFileReader extends WICMMutationFileReader<IntWritable
         if(getMode() == MODE.ADD_VERTEX) {
             startpoint = Integer.parseInt(points[0]);
             endpoint = (points.length == 2) ? Integer.parseInt(points[1]) : LAST_SNAPSHOT.get(getConf());
-        } else {
+        } else if(getMode() == MODE.TRUNCATE_VERTEX) {
             startpoint = Integer.MIN_VALUE;
             endpoint = Integer.parseInt(points[0]);
+        } else {
+            startpoint = Integer.MIN_VALUE;
+            endpoint = Integer.MIN_VALUE;
         }
 
         return new IntBooleanIntervalData(new IntInterval(startpoint, endpoint));
@@ -39,10 +42,10 @@ public class REACHDMutationFileReader extends WICMMutationFileReader<IntWritable
 
     @Override
     List<Edge<IntWritable, IntIntIntervalData>> setEdges(String[] line) {
-        if(getMode() == MODE.DELETE_VERTEX || getMode() == MODE.TRUNCATE_VERTEX)
+        if(getMode() == MODE.DELETE_VERTEX)
             return null;
 
-        int startIndex = (getMode() == MODE.ADD_VERTEX) ? 3 : 2;
+        int startIndex = (getMode() == MODE.ADD_VERTEX || getMode() == MODE.TRUNCATE_VERTEX) ? 3 : 2;
         List<Edge<IntWritable, IntIntIntervalData>> edges =
                 Lists.newArrayListWithCapacity((line.length - startIndex)/3);
         for (int n = startIndex; n < line.length; n=n+3) {

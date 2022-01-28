@@ -50,7 +50,10 @@ public class UByteLDVertexResolver extends WICMVertexResolver<IntWritable, UByte
                 (IntervalVertex<IntWritable, UnsignedByte, Integer, UByteIntIntervalData, Integer, UByteIntIntervalData, ?, ?, ?>)originalVertex;
         IntervalVertex<IntWritable, UnsignedByte, Integer, UByteIntIntervalData, Integer, UByteIntIntervalData, ?, ?, ?> newIntervalVertex =
                 (IntervalVertex<IntWritable, UnsignedByte, Integer, UByteIntIntervalData, Integer, UByteIntIntervalData, ?, ?, ?>)newVertex;
-        intervalVertex.removeState(intervalVertex.getLifespan().getStart(), newIntervalVertex.getLifespan().getStart());
-        intervalVertex.getLifespan().setStart(newIntervalVertex.getLifespan().getStart());
+        if(newIntervalVertex.getLifespan().getEnd().intValue() != 0) {
+            intervalVertex.removeState(intervalVertex.getLifespan().getStart(), newIntervalVertex.getLifespan().getStart());
+            intervalVertex.getLifespan().setStart(newIntervalVertex.getLifespan().getStart());
+        }
+        intervalVertex.setEdges(newIntervalVertex.getEdges());
     }
 }

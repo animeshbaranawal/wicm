@@ -48,7 +48,10 @@ public class SSSPVertexResolver extends WICMVertexResolver<IntWritable, IntDoubl
                 (IntervalVertex<IntWritable, Integer, Double, IntDoubleIntervalData, Double, IntDoubleIntervalData, ?, ?, ?>)originalVertex;
         IntervalVertex<IntWritable, Integer, Double, IntDoubleIntervalData, Double, IntDoubleIntervalData, ?, ?, ?> newIntervalVertex =
                 (IntervalVertex<IntWritable, Integer, Double, IntDoubleIntervalData, Double, IntDoubleIntervalData, ?, ?, ?>)newVertex;
-        intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
-        intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        if(newIntervalVertex.getLifespan().getEnd() != Integer.MIN_VALUE) { // truncate the endpoint of the vertex
+            intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
+            intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        }
+        intervalVertex.setEdges(newIntervalVertex.getEdges());
     }
 }
