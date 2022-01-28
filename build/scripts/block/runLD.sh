@@ -17,7 +17,7 @@ sleep 10
 echo "YARN restarted!"
 sleep 40
 END
-echo "Starting ICM job..."
+echo "Starting ICM local unrolling job..."
 
 hadoop jar WICM-1.0-SNAPSHOT-jar-with-dependencies.jar \
 org.apache.giraph.GiraphRunner in.dreamlab.wicm.algorithms.block_icm.LD \
@@ -33,7 +33,7 @@ org.apache.giraph.GiraphRunner in.dreamlab.wicm.algorithms.block_icm.LD \
 -ca graphite.warpOperationClass=in.dreamlab.graphite.warpOperation.IntMax \
 -ca wicm.localBufferSize="$bufferSize" \
 -ca wicm.minMessages="$minMsg" \
--ca giraph.numComputeThreads=3 \
+-ca giraph.numComputeThreads=1 \
 -ca sourceId=$source \
 -ca debugPerformance=$perfFlag
 

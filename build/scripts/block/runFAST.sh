@@ -17,20 +17,20 @@ sleep 10
 echo "YARN restarted!"
 sleep 40
 END
-echo "Starting ICM job..."
+echo "Starting ICM local unrolling job..."
 
 hadoop jar WICM-1.0-SNAPSHOT-jar-with-dependencies.jar \
-org.apache.giraph.GiraphRunner in.dreamlab.wicm.algorithms.block_icm.FAST \
+org.apache.giraph.GiraphRunner in.dreamlab.wicm.algorithms.block_icm.UByteFAST \
 --yarnjars WICM-1.0-SNAPSHOT-jar-with-dependencies.jar \
 --yarnheap 3000 \
--vif in.dreamlab.graphite.io.formats.IntIntNullTextInputFormat -vip $inputGraph \
--vof in.dreamlab.wicm.io.formats.IntIntFASTTextOutputFormat -op $outputDir"_debug" -w 1 \
+-vif in.dreamlab.wicm.io.formats.UByteUByteNullTextInputFormat -vip $inputGraph \
+-vof in.dreamlab.wicm.io.formats.UByteUByteFASTTextOutputFormat -op $outputDir"_debug" -w 1 \
 -ca giraph.vertexClass=in.dreamlab.graphite.graph.DefaultIntervalVertex \
--ca giraph.vertexValueClass=in.dreamlab.graphite.graphData.IntIntIntervalData \
--ca giraph.edgeValueClass=in.dreamlab.graphite.graphData.IntIntIntervalData \
--ca giraph.outgoingMessageValueClass=in.dreamlab.graphite.comm.messages.IntIntIntervalMessage \
--ca graphite.intervalClass=in.dreamlab.graphite.types.IntInterval \
--ca graphite.warpOperationClass=in.dreamlab.graphite.warpOperation.IntMax \
+-ca giraph.vertexValueClass=in.dreamlab.wicm.graphData.UByteUByteIntervalData \
+-ca giraph.edgeValueClass=in.dreamlab.wicm.graphData.UByteUByteIntervalData \
+-ca giraph.outgoingMessageValueClass=in.dreamlab.wicm.comm.messages.UByteStartSlimMessage \
+-ca graphite.intervalClass=in.dreamlab.wicm.types.UByteInterval \
+-ca graphite.warpOperationClass=in.dreamlab.wicm.warpOperation.UByteMax \
 -ca wicm.localBufferSize="$bufferSize" \
 -ca wicm.minMessages="$minMsg" \
 -ca giraph.numComputeThreads=1 \

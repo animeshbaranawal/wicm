@@ -16,18 +16,18 @@ sleep 10
 echo "hadoop restarted!"
 sleep 40
 END
-echo "Starting ICM job..."
+echo "Starting ICM local unrolling job..."
 
 ### default
 hadoop jar WICM-1.0-SNAPSHOT-jar-with-dependencies.jar \
 org.apache.giraph.GiraphRunner in.dreamlab.wicm.algorithms.block_icm.REACH_D \
 --yarnjars WICM-1.0-SNAPSHOT-jar-with-dependencies.jar \
 --yarnheap 3000 \
--vif in.dreamlab.graphite.io.formats.IntBooleanNullTextInputFormat -vip $inputGraph \
+-vif in.dreamlab.wicm.io.formats.IntBooleanIntNullTextInputFormat -vip $inputGraph \
 -vof in.dreamlab.graphite.io.formats.IntBooleanIdWithValueTextOutputFormat -op $outputDir"_debug" -w 1 \
 -ca giraph.vertexClass=in.dreamlab.graphite.graph.DefaultIntervalVertex \
 -ca giraph.vertexValueClass=in.dreamlab.graphite.graphData.IntBooleanIntervalData \
--ca giraph.edgeValueClass=in.dreamlab.graphite.graphData.IntBooleanIntervalData \
+-ca giraph.edgeValueClass=in.dreamlab.graphite.graphData.IntIntIntervalData \
 -ca giraph.outgoingMessageValueClass=in.dreamlab.graphite.comm.messages.IntBooleanIntervalMessage \
 -ca graphite.intervalClass=in.dreamlab.graphite.types.IntInterval \
 -ca graphite.warpOperationClass=in.dreamlab.graphite.warpOperation.BooleanOr \
