@@ -51,7 +51,10 @@ public class TMSTVertexResolver extends WICMVertexResolver<IntWritable, IntPairI
                 (IntervalVertex<IntWritable, Integer, Pair<Integer,Integer>, IntPairIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?>)originalVertex;
         IntervalVertex<IntWritable, Integer, Pair<Integer,Integer>, IntPairIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?> newIntervalVertex =
                 (IntervalVertex<IntWritable, Integer, Pair<Integer,Integer>, IntPairIntIntervalData, Integer, IntIntIntervalData, ?, ?, ?>)newVertex;
-        intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
-        intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        if(newIntervalVertex.getLifespan().getEnd() != Integer.MIN_VALUE) { // truncate the endpoint of the vertex
+            intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
+            intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        }
+        intervalVertex.setEdges(newIntervalVertex.getEdges());
     }
 }

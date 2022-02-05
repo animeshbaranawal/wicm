@@ -52,7 +52,10 @@ public class UByteTMSTVertexResolver extends WICMVertexResolver<IntWritable, UBy
                 (IntervalVertex<IntWritable, UnsignedByte, Pair<UnsignedByte,Integer>, UBytePairUByteIntIntervalData, UnsignedByte, UByteUByteIntervalData, ?, ?, ?>)originalVertex;
         IntervalVertex<IntWritable, UnsignedByte, Pair<UnsignedByte,Integer>, UBytePairUByteIntIntervalData, UnsignedByte, UByteUByteIntervalData, ?, ?, ?> newIntervalVertex =
                 (IntervalVertex<IntWritable, UnsignedByte, Pair<UnsignedByte,Integer>, UBytePairUByteIntIntervalData, UnsignedByte, UByteUByteIntervalData, ?, ?, ?>)newVertex;
-        intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
-        intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        if(newIntervalVertex.getLifespan().getEnd().intValue() != 0) {
+            intervalVertex.removeState(newIntervalVertex.getLifespan().getEnd(), intervalVertex.getLifespan().getEnd());
+            intervalVertex.getLifespan().setEnd(newIntervalVertex.getLifespan().getEnd());
+        }
+        intervalVertex.setEdges(newIntervalVertex.getEdges());
     }
 }

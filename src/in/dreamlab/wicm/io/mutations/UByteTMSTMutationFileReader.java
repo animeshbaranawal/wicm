@@ -24,7 +24,7 @@ public class UByteTMSTMutationFileReader extends WICMMutationFileReader<IntWrita
 
     @Override
     UBytePairUByteIntIntervalData setVertexValue(String[] line) {
-        if(getMode() == MODE.DELETE_VERTEX || getMode() == MODE.REPLACE_EDGE)
+        if(getMode() == MODE.DELETE_VERTEX)
             return null;
 
         String[] points = line[2].split("/");
@@ -32,9 +32,12 @@ public class UByteTMSTMutationFileReader extends WICMMutationFileReader<IntWrita
         if(getMode() == MODE.ADD_VERTEX) {
             startpoint = Integer.parseInt(points[0]);
             endpoint = (points.length == 2) ? Integer.parseInt(points[1]) : LAST_SNAPSHOT.get(getConf());
-        } else {
+        } else if(getMode() == MODE.TRUNCATE_VERTEX) {
             startpoint = 0;
             endpoint = Integer.parseInt(points[0]);
+        } else {
+            startpoint = 0;
+            endpoint = 0;
         }
 
         return new UBytePairUByteIntIntervalData(new UByteInterval(startpoint, endpoint));
@@ -42,10 +45,10 @@ public class UByteTMSTMutationFileReader extends WICMMutationFileReader<IntWrita
 
     @Override
     List<Edge<IntWritable, UByteUByteIntervalData>> setEdges(String[] line) {
-        if(getMode() == MODE.DELETE_VERTEX || getMode() == MODE.TRUNCATE_VERTEX)
+        if(getMode() == MODE.DELETE_VERTEX)
             return null;
 
-        int startIndex = (getMode() == MODE.ADD_VERTEX) ? 3 : 2;
+        int startIndex = (getMode() == MODE.ADD_VERTEX || getMode() == MODE.TRUNCATE_VERTEX) ? 3 : 2;
         List<Edge<IntWritable, UByteUByteIntervalData>> edges =
                 Lists.newArrayListWithCapacity((line.length - startIndex)/3);
         for (int n = startIndex; n < line.length; n=n+3) {
