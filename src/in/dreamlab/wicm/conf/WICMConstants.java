@@ -12,8 +12,6 @@ public interface WICMConstants {
                                             "Local Buffer size to use in block based warp");
     IntConfOption MIN_MESSAGES = new IntConfOption("wicm.minMessages", 50,
                                             "minimum messages to use in block based warp");
-//    IntConfOption MAX_MESSAGES = new IntConfOption("wicm.maxMessages", 100,
-//            "minimum messages to use in block based warp");
     BooleanConfOption ENABLE_BLOCK = new BooleanConfOption("icm.blockWarp", false,
             "Enable Block Based Warp");
 
