@@ -46,17 +46,21 @@ public abstract class DebugWindowIntervalComputation<I extends WritableComparabl
 
     @Override
     public void preSuperstep() {
+        //get context for this worker
         worker = this.getWorkerContext();
+        //initialize debugging data.
         localDebugData.initialise();
     }
 
     @Override
     public void postSuperstep() {
+        //dump logs
         if(dumpPerfData.get(getConf())){
             localDebugData.dump(LOG, getSuperstep());
         }
 
         // no messages sent by this compute thread, worker possibly finished?
+        //??
         worker.finished.set(worker.finished.get() && (localDebugData.Messages == 0));
     }
 
@@ -69,6 +73,8 @@ public abstract class DebugWindowIntervalComputation<I extends WritableComparabl
         intervalCompute((IntervalVertex<I, T, S, V, EP, E, PW, P, IM>) vertex, messages);
         intervalComputeRegion = System.nanoTime() - intervalComputeRegion;
 
+        //logging if this call to giraph compute was a no-op or op
+        //??
         if(!isUseful){ // this giraph compute was a no-op call
             localDebugData.RedundantICRegion += intervalComputeRegion;
             localDebugData.giraphRCompCalls += 1;

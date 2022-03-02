@@ -19,12 +19,17 @@ public class WICMMutationsWorkerContext extends GraphiteDebugWindowWorkerContext
 
     @Override
     public void preSuperstep() {
+        //if mutation superstep
         if(((BooleanWritable) getAggregatedValue(Mutation)).get()) {
+            //then record windownumber and write to logs
             fileLock = new Semaphore(1);
             int windowNumber = ((IntWritable) getAggregatedValue(WindowNum)).get();
             mutationFileName = MUTATION_PATH.get(getConf()) + "-" + windowNumber + "-" + getMyWorkerIndex();
             LOG.info("WindowNumber:"+windowNumber+", Filename:"+mutationFileName);
-        } else if(((BooleanWritable) getAggregatedValue(Init)).get()) {
+        }
+        //else if first superstep
+        else if(((BooleanWritable) getAggregatedValue(Init)).get()) {
+            //initialize logging
             try {
                 String filenamePath = RESOLVER_SUBDIR.get(getConf())+
                         "/dump-"+getSuperstep()+"-"+getMyWorkerIndex();
@@ -33,6 +38,7 @@ public class WICMMutationsWorkerContext extends GraphiteDebugWindowWorkerContext
                 LOG.info("Caught exception: "+ e);
             }
         }
+        //execute superstep of superior
         super.preSuperstep();
     }
 
@@ -46,6 +52,7 @@ public class WICMMutationsWorkerContext extends GraphiteDebugWindowWorkerContext
             }
             System.gc();
         }
+        //execute post superstep of parent class
         super.postSuperstep();
     }
 }
